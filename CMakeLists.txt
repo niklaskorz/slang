@@ -160,6 +160,8 @@ advanced_option(
     "Build using system unordered dense"
     OFF
 )
+advanced_option(SLANG_USE_SYSTEM_SPIRV_TOOLS "Build using system SPIR-V tools library" OFF)
+advanced_option(SLANG_USE_SYSTEM_GLSLANG "Build using system glslang library" OFF)
 
 option(
     SLANG_SPIRV_HEADERS_INCLUDE_DIR
@@ -384,6 +386,34 @@ find_package(Threads REQUIRED)
 
 if(${SLANG_USE_SYSTEM_UNORDERED_DENSE})
     find_package(unordered_dense CONFIG QUIET)
+endif()
+
+if(${SLANG_USE_SYSTEM_MINIZ})
+    find_package(miniz REQUIRED)
+    add_library(miniz ALIAS miniz::miniz)
+endif()
+
+if(${SLANG_USE_SYSTEM_LZ4})
+    find_package(lz4 REQUIRED)
+    add_library(lz4_static ALIAS LZ4::lz4)
+endif()
+
+if(${SLANG_USE_SYSTEM_VULKAN_HEADERS})
+    find_package(VulkanHeaders REQUIRED)
+endif()
+
+if(${SLANG_USE_SYSTEM_SPIRV_HEADERS})
+    find_package(SPIRV-Headers REQUIRED)
+    add_library(SPIRV-Headers ALIAS SPIRV-Headers::SPIRV-Headers)
+endif()
+
+if(${SLANG_USE_SYSTEM_SPIRV_TOOLS})
+    find_package(SPIRV-Tools REQUIRED)
+endif()
+
+if(${SLANG_USE_SYSTEM_GLSLANG})
+    find_package(glslang REQUIRED)
+    add_library(glslang ALIAS glslang::glslang)
 endif()
 
 add_subdirectory(external)

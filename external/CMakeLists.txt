@@ -117,6 +117,7 @@ if(NOT ${SLANG_USE_SYSTEM_SPIRV_HEADERS})
 endif()
 
 if(SLANG_ENABLE_SLANG_GLSLANG)
+if(NOT ${SLANG_USE_SYSTEM_SPIRV_TOOLS})
     # SPIRV-Tools
     set(SPIRV_TOOLS_BUILD_STATIC ON)
     set(SPIRV_WERROR OFF)
@@ -138,11 +139,14 @@ if(SLANG_ENABLE_SLANG_GLSLANG)
             ${system}
         )
     endif()
+endif()
 
+if(NOT ${SLANG_USE_SYSTEM_GLSLANG})
     # glslang
     set(SKIP_GLSLANG_INSTALL ON)
     set(ENABLE_OPT ON)
     set(ENABLE_PCH OFF)
+    set(ALLOW_EXTERNAL_SPIRV_TOOLS ${SLANG_USE_SYSTEM_SPIRV_TOOLS})
     if(NOT SLANG_OVERRIDE_GLSLANG_PATH)
         add_subdirectory(glslang EXCLUDE_FROM_ALL ${system})
     else()
@@ -153,6 +157,7 @@ if(SLANG_ENABLE_SLANG_GLSLANG)
             ${system}
         )
     endif()
+endif()
 endif()
 
 # imgui
