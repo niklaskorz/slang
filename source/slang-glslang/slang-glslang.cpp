@@ -1,8 +1,7 @@
 // slang-glslang.cpp
 #include "slang-glslang.h"
 
-#include "SPIRV/GlslangToSpv.h"
-#include "glslang/MachineIndependent/localintermediate.h"
+#include "glslang/SPIRV/GlslangToSpv.h"
 #include "glslang/Public/ShaderLang.h"
 #include "slang.h"
 #include "spirv-tools/libspirv.h"
@@ -18,6 +17,7 @@
 #include <memory>
 #include <mutex>
 #include <sstream>
+#include <cassert>
 
 // This is a wrapper to allow us to run the `glslang` compiler
 // in a controlled fashion.
@@ -780,6 +780,11 @@ static int glslang_compileGLSLToSPIRV(glslang_CompileRequest_1_2 request)
             return 1;
         }
 
+        if (debugLevel == SLANG_DEBUG_INFO_LEVEL_MAXIMAL)
+        {
+            shader->addSourceText(sourceText, sourceTextLength);
+        }
+
         if (request.entryPointName && strlen(request.entryPointName))
             shader->setEntryPoint(request.entryPointName);
 
@@ -803,10 +808,6 @@ static int glslang_compileGLSLToSPIRV(glslang_CompileRequest_1_2 request)
         auto stageIntermediate = program->getIntermediate((EShLanguage)stage);
         if (!stageIntermediate)
             continue;
-        if (debugLevel == SLANG_DEBUG_INFO_LEVEL_MAXIMAL)
-        {
-            stageIntermediate->addSourceText(sourceText, sourceTextLength);
-        }
 
         std::vector<unsigned int> spirv;
         spv::SpvBuildLogger logger;
